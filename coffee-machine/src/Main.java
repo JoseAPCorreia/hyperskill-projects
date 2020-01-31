@@ -13,17 +13,48 @@ public class Main {
         Scanner input = new Scanner(System.in);
 
         //Amount of each ingredient per cup
-        int water = 200;
-        int milk = 50;
-        int coffeeBeans = 15;
+        int waterNeeded = 200;
+        int milkNeeded = 50;
+        int beansNeeded = 15;
 
+/*
         System.out.println("Write how many cups of coffee you will need: ");
 
         int coffeeNeeded = input.nextInt();
 
         System.out.println("For " + coffeeNeeded + " cups of coffee you will need:");
-        System.out.println((water * coffeeNeeded) + " ml of water");
-        System.out.println((milk * coffeeNeeded) + " ml of milk");
-        System.out.println((coffeeBeans * coffeeNeeded) + " g of coffee beans");
+        System.out.println((waterNeeded * coffeeNeeded) + " ml of water");
+        System.out.println((milkNeeded * coffeeNeeded) + " ml of milk");
+        System.out.println((beansNeeded * coffeeNeeded) + " g of coffee beans");
+*/
+
+        System.out.println("Write how many ml of water the coffee machine has:");
+        int currentWater = input.nextInt();
+
+        System.out.println("Write how many ml of milk the coffee machine has:");
+        int currentMilk = input.nextInt();
+
+        System.out.println("Write how many grams of coffee beans the coffee machine has:");
+        int currentBeans = input.nextInt();
+
+        System.out.println("Write how many cups of coffee you will need:");
+        int cupsNeeded = input.nextInt();
+
+        int waterCups = currentWater > waterNeeded ? currentWater / waterNeeded : 0;
+        int milkCups = currentMilk > milkNeeded ? currentMilk / milkNeeded : 0;
+        int beansCups = currentBeans > beansNeeded ? currentBeans / beansNeeded : 0;
+
+
+        int minCups = Math.min(waterCups, Math.min(milkCups, beansCups));
+
+        if(minCups < cupsNeeded){
+            System.out.println("No, I can make only " + minCups + " cups(s) of coffee" );
+        }
+        else if(minCups > cupsNeeded){
+            System.out.println("Yes, I can make that amount of coffee ( and even " + (minCups - cupsNeeded) + " more than that)");
+        }
+        else{
+            System.out.println("Yes, I can make that amount of coffee");
+        }
     }
 }
