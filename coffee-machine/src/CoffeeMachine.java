@@ -6,7 +6,8 @@ public class CoffeeMachine {
     private int coffeeBeans;
     private int disposableCups;
     private int money;
-    Scanner input;
+    private boolean isMachineOn;
+    private Scanner input;
 
     public CoffeeMachine(int water, int milk, int coffeeBeans, int disposableCups, int money){
         this.water = water;
@@ -14,39 +15,99 @@ public class CoffeeMachine {
         this.coffeeBeans = coffeeBeans;
         this.disposableCups = disposableCups;
         this.money = money;
+        this.isMachineOn = true;
         this.input = new Scanner(System.in);
     }
 
-    public void buy(){
+    void machineOn(){
+        while (isMachineOn){
+        System.out.println("Write action (buy, fill, take, remaining, exit):");
+        String action = input.next();
+            switch (action) {
+                case "buy":
+                    buy();
+                    break;
+                case "fill":
+                    fill();
+                    break;
+                case "take":
+                    take();
+                    break;
+                case "remaining":
+                    quantities();
+                    break;
+                case "exit":
+                    exit();
+                    break;
+            }
+        }
+    }
+    private void buy(){
         System.out.println("What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino:");
-        String buyOrder = input.nextLine();
+        String buyOrder = input.next();
         switch (buyOrder) {
-            case "1": //Espresso
-                water -= 250;
-                coffeeBeans -= 16;
-                disposableCups -= 1;
-                money += 4;
+            case "1":
+                if (canMakeCoffee(250, 16, 16)) {
+                    water -= 250;
+                    coffeeBeans -= 16;
+                    disposableCups -= 1;
+                    money += 4;
+                }
                 break;
-            case "2": // Latte
-                water -= 350;
-                milk -= 75;
-                coffeeBeans -= 20;
-                disposableCups -= 1;
-                money += 7;
+            case "2":
+                if (canMakeCoffee(350, 75, 20)) {
+                    water -= 350;
+                    milk -= 75;
+                    coffeeBeans -= 20;
+                    disposableCups -= 1;
+                    money += 7;
+                }
                 break;
-            case "3": //Cappuccino
-                water -= 200;
-                milk -= 100;
-                coffeeBeans -= 12;
-                disposableCups -= 1;
-                money += 6;
+            case "3":
+                if (canMakeCoffee(200, 100, 12)) {
+                    water -= 200;
+                    milk -= 100;
+                    coffeeBeans -= 12;
+                    disposableCups -= 1;
+                    money += 6;
+                }
+                break;
+            case "back":
                 break;
             default:
                 System.out.println("Not a valid option.");
+                break;
         }
     }
 
-    public void fill(){
+    private boolean canMakeCoffee(int waterNeeded, int milkNeeded, int coffeeBeansNeeded){
+        if (water >= waterNeeded) {
+            if (milk >= milkNeeded) {
+                if (coffeeBeans >= coffeeBeansNeeded) {
+                    if(disposableCups > 0){
+                        System.out.println("I have enough resources, making you a coffee!");
+                        return true;
+                    }
+                    else{
+                        System.out.println("Sorry, not enough disposable cups!");
+                        return false;
+                    }
+                } else {
+                    System.out.println("Sorry, not enough beans!");
+                    return false;
+                }
+
+            } else {
+                System.out.println("Sorry, not enough milk!");
+                return false;
+            }
+        } else {
+            System.out.println("Sorry, not enough water!");
+            return false;
+        }
+    }
+
+    private void fill(){
         System.out.println("Write how many ml of water do you want to add:");
         int waterToAdd = input.nextInt();
         water += waterToAdd;
@@ -64,17 +125,21 @@ public class CoffeeMachine {
         disposableCups += cupsToAdd;
     }
 
-    public void take(){
+    private void take(){
         System.out.println("I gave you $" + money);
         money = 0;
     }
 
-    public void quantities(){
+    private void quantities(){
         System.out.println("The coffee machine has:");
         System.out.println(water + "ml of water");
         System.out.println(milk + "ml of milk");
         System.out.println(coffeeBeans + " grams of coffee beans");
         System.out.println(disposableCups + " of disposable cups");
         System.out.println(money + " of money");
+    }
+
+    private void exit(){
+        isMachineOn = false;
     }
 }
