@@ -8,6 +8,7 @@ public class CoffeeMachine {
     private int money;
     private boolean isMachineOn;
     private Scanner input;
+    Status currentStatus;
 
     public CoffeeMachine(int water, int milk, int coffeeBeans, int disposableCups, int money){
         this.water = water;
@@ -17,6 +18,7 @@ public class CoffeeMachine {
         this.money = money;
         this.isMachineOn = true;
         this.input = new Scanner(System.in);
+        this.currentStatus = Status.CHOOSING;
     }
 
     void machineOn(){
@@ -26,18 +28,23 @@ public class CoffeeMachine {
             switch (action) {
                 case "buy":
                     buy();
+                    currentStatus = Status.BUYING;
                     break;
                 case "fill":
                     fill();
+                    currentStatus = Status.FILLING;
                     break;
                 case "take":
                     take();
+                    currentStatus = Status.TAKING;
                     break;
                 case "remaining":
                     quantities();
+                    currentStatus = Status.REMAINING;
                     break;
                 case "exit":
                     exit();
+                    currentStatus = Status.EXITING;
                     break;
             }
         }
@@ -50,7 +57,7 @@ public class CoffeeMachine {
                 if (canMakeCoffee(250, 16, 16)) {
                     water -= 250;
                     coffeeBeans -= 16;
-                    disposableCups -= 1;
+                    disposableCups--;
                     money += 4;
                 }
                 break;
@@ -59,7 +66,7 @@ public class CoffeeMachine {
                     water -= 350;
                     milk -= 75;
                     coffeeBeans -= 20;
-                    disposableCups -= 1;
+                    disposableCups--;
                     money += 7;
                 }
                 break;
@@ -68,7 +75,7 @@ public class CoffeeMachine {
                     water -= 200;
                     milk -= 100;
                     coffeeBeans -= 12;
-                    disposableCups -= 1;
+                    disposableCups--;
                     money += 6;
                 }
                 break;
@@ -81,6 +88,7 @@ public class CoffeeMachine {
     }
 
     private boolean canMakeCoffee(int waterNeeded, int milkNeeded, int coffeeBeansNeeded){
+        currentStatus = Status.CHOOSING;
         if (water >= waterNeeded) {
             if (milk >= milkNeeded) {
                 if (coffeeBeans >= coffeeBeansNeeded) {
@@ -123,11 +131,15 @@ public class CoffeeMachine {
         System.out.println("Write how many disposable cups of coffee do you want to add:");
         int cupsToAdd = input.nextInt();
         disposableCups += cupsToAdd;
+
+        currentStatus = Status.CHOOSING;
     }
 
     private void take(){
         System.out.println("I gave you $" + money);
         money = 0;
+
+        currentStatus = Status.CHOOSING;
     }
 
     private void quantities(){
@@ -137,6 +149,7 @@ public class CoffeeMachine {
         System.out.println(coffeeBeans + " grams of coffee beans");
         System.out.println(disposableCups + " of disposable cups");
         System.out.println(money + " of money");
+        currentStatus = Status.CHOOSING;
     }
 
     private void exit(){
